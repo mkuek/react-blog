@@ -1,5 +1,6 @@
 import React, { Fragment, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { parseISO, formatDistanceToNow } from "date-fns";
 
 export const ListPosts = () => {
   const [posts, setPosts] = useState([]);
@@ -13,17 +14,28 @@ export const ListPosts = () => {
       console.log(error.message);
     }
   };
+
+  const timeConvert = (time) => {
+    const date = new Date(time).toISOString();
+    const ISOconvert = parseISO(date);
+    const formatted = formatDistanceToNow(ISOconvert);
+    console.log(formatted);
+    return formatted;
+  };
+
   useEffect(() => {
     getPosts();
   }, []);
-
-  const renderedPosts = posts.map((post, index) => {
+  const orderedPosts = posts
+    .slice()
+    .sort((a, b) => b.created.localeCompare(a.date));
+  const renderedPosts = orderedPosts.map((post, index) => {
     return (
       <div key={index}>
         <h3>{post.title}</h3>
         <h5>{post.content}</h5>
-        <h5>{post.post_id}</h5>
-        <Link to={`/posts/${post.post_id}`}>test</Link>
+        <h5>{timeConvert(post.created) + " ago"}</h5>
+        <Link to={`/posts/${post.post_id}`}>View Post</Link>
       </div>
     );
   });

@@ -13,10 +13,10 @@ app.get("/", (req, res) => {
 
 app.post("/posts", async (req, res) => {
   try {
-    const { title, content } = req.body;
+    const { title, content, author } = req.body;
     const newPost = await pool.query(
-      "INSERT INTO blog (title, content) VALUES($1, $2) RETURNING *",
-      [title, content]
+      "INSERT INTO blog (title, content,author) VALUES($1, $2, $3) RETURNING *",
+      [title, content, author]
     );
     res.json(newPost.rows[0]);
   } catch (error) {

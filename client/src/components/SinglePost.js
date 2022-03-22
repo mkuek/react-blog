@@ -1,7 +1,7 @@
 import React, { Fragment, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
-function SinglePost() {
+export const SinglePost = () => {
   const [post, setPost] = useState([]);
   const { postId } = useParams();
 
@@ -15,11 +15,19 @@ function SinglePost() {
     }
   };
 
+  const timeConvert = () => {
+    const dates = new Date(post.created).toLocaleString();
+    return dates;
+  };
   useEffect(() => {
     getSinglePost(postId);
   }, []);
 
-  return <div>{post.title}</div>;
-}
-
-export default SinglePost;
+  return (
+    <Fragment>
+      <h1>{post.title}</h1>
+      <h3>{post.content}</h3>
+      <p>{timeConvert()}</p>
+    </Fragment>
+  );
+};
