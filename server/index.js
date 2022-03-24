@@ -13,10 +13,10 @@ app.get("/", (req, res) => {
 
 app.post("/posts", async (req, res) => {
   try {
-    const { title, content, author } = req.body;
+    const { title, content, author, updated } = req.body;
     const newPost = await pool.query(
-      "INSERT INTO blog (title, content,author) VALUES($1, $2, $3) RETURNING *",
-      [title, content, author]
+      "INSERT INTO blog (title, content,author, updated) VALUES($1, $2, $3, $4) RETURNING *",
+      [title, content, author, updated]
     );
     res.json(newPost.rows[0]);
   } catch (error) {
@@ -60,13 +60,13 @@ app.get("/posts/:id", async (req, res) => {
   }
 });
 
-app.put("/posts/:id", async (req, res) => {
+app.put("/posts/:id/edit", async (req, res) => {
   try {
     const id = req.params.id;
-    const { title, content } = req.body;
+    const { title, content, author, updated } = req.body;
     const updatePost = await pool.query(
-      "UPDATE blog SET title = $1, content = $2 WHERE post_id=$3",
-      [title, content, id]
+      "UPDATE blog SET title = $1, content = $2, author=$3, updated=$4 WHERE post_id=$5",
+      [title, content, author, updated, id]
     );
     res.json("Post was updated");
   } catch (error) {

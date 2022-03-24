@@ -1,5 +1,5 @@
 import React, { Fragment, useState } from "react";
-
+import "./App.css";
 import {
   BrowserRouter as Router,
   Route,
@@ -11,7 +11,6 @@ import "./App.css";
 import { ListPosts } from "./components/ListPosts";
 import { Navbar } from "./components/NavBar";
 import { SinglePost } from "./components/SinglePost";
-import { SubmitForm } from "./components/SubmitForm";
 function App() {
   return (
     <Router>
@@ -23,7 +22,6 @@ function App() {
             path="/"
             element={
               <>
-                <SubmitForm />
                 <ListPosts />
               </>
             }
