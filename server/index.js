@@ -24,6 +24,33 @@ app.post("/posts", async (req, res) => {
   }
 });
 
+app.post("/posts/:id/comments", async (req, res) => {
+  try {
+    const id = req.params.id;
+    const { comment_text, author, updated } = req.body;
+    const newComment = await pool.query(
+      "INSERT INTO comments (post_id, comment_text, author, updated) VALUES( $1, $2, $3, $4) RETURNING *",
+      [id, comment_text, author, updated]
+    );
+    res.json(newComment.rows[0]);
+  } catch (error) {
+    console.log(error.message);
+  }
+});
+
+app.get("/posts/:id/comments", async (req, res) => {
+  try {
+    const id = req.params.id;
+    const allComments = await pool.query(
+      "SELECT * FROM comments WHERE post_id=$1",
+      [id]
+    );
+    res.json(allComments.rows);
+  } catch (error) {
+    console.log(error.message);
+  }
+});
+
 app.get("/posts", async (req, res) => {
   try {
     const allPosts = await pool.query("SELECT * FROM blog");
@@ -80,7 +107,7 @@ app.delete("/posts/:id", async (req, res) => {
     const deletePost = await pool.query("DELETE FROM blog WHERE post_id=$1", [
       id,
     ]);
-    res.json("Post was deleted");
+    res.send("Post was deleted");
   } catch (error) {
     console.log(error.message);
   }

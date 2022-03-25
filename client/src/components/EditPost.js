@@ -69,7 +69,9 @@ export const EditPost = ({ post, setPost, getSinglePost, edit, setEdit }) => {
           />
         </label>
       </div>
-      <input type="submit" onClick={handleSubmit} />
+      <button type="submit" onClick={handleSubmit}>
+        Save Post
+      </button>
     </form>
   );
 };

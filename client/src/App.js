@@ -6,6 +6,7 @@ import {
   Redirect,
   Routes,
   useParams,
+  Navigate,
 } from "react-router-dom";
 import "./App.css";
 import { ListPosts } from "./components/ListPosts";
@@ -27,6 +28,7 @@ function App() {
             }
           />
           <Route exact path="/posts/:postId" element={<SinglePost />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </div>
     </Router>

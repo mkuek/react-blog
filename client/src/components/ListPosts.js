@@ -2,7 +2,7 @@ import React, { Fragment, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { parseISO, formatDistanceToNow } from "date-fns";
 import { SubmitForm } from "./SubmitForm";
-
+import ListComments from "./ListComments";
 export const ListPosts = () => {
   const [posts, setPosts] = useState([]);
   const [submitted, setSubmitted] = useState(false);
@@ -34,12 +34,14 @@ export const ListPosts = () => {
     return (
       <div key={index} className="card">
         <div className="card-content">
-          <h3>{post.title}</h3>
+          <h3>
+            <Link to={`/posts/${post.post_id}`}>{post.title}</Link>
+          </h3>
           <h5>{post.content}</h5>
-          <h5>Post By:{post.author}</h5>
           <div>
-            <Link to={`/posts/${post.post_id}`}>View Post</Link>
-            <i>{` -${timeConvert(post.created)} ago`}</i>
+            <p></p>
+            <i>{`Submitted ${timeConvert(post.created)} ago by 
+            ${post.author}`}</i>
           </div>
         </div>
       </div>

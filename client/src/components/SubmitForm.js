@@ -23,10 +23,8 @@ export const SubmitForm = ({ posts, setPosts, submitted, setSubmitted }) => {
     event.preventDefault();
     console.log(formContents);
     axios.post("http://localhost:5050/posts", formContents);
-    setTimeout(() => {
-      setSubmitted((submitted) => !submitted);
-      setFormContacts({ title: "", content: "", author: "" });
-    }, 2000);
+    setSubmitted((submitted) => !submitted);
+    setFormContacts({ title: "", content: "", author: "" });
     setTimeout(() => {
       setSubmitted((submitted) => !submitted);
     }, 2000);
@@ -69,7 +67,9 @@ export const SubmitForm = ({ posts, setPosts, submitted, setSubmitted }) => {
           />
         </label>
       </div>
-      <input type="submit" onClick={handleSubmit} />
+      <button type="submit" onClick={handleSubmit}>
+        Submit
+      </button>
     </form>
   );
 };
