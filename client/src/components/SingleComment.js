@@ -1,20 +1,27 @@
 import React, { Fragment, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { parseISO, formatDistanceToNow, set } from "date-fns";
+import { SubmitForm } from "./SubmitForm";
 import { useParams, useNavigate } from "react-router-dom";
-
-const ListComments = ({ submmitted }) => {
+const SingleComment = () => {
   const [posts, setPosts] = useState([]);
   const [comments, setComments] = useState([]);
 
+  const [submitted, setSubmitted] = useState(false);
   const { postId } = useParams();
-  const getComments = async () => {
+  const getPosts = async () => {
     try {
-      const response = await fetch(
-        `http://localhost:5050/posts/${postId}/comments`
-      );
-      const jsonData = await response.json();
-      setComments(jsonData);
+      const [comRes, postRes] = await Promise.all([
+        fetch(`http://localhost:5050/posts/${postId}/comments`).then(
+          (response) => response.json()
+        ),
+        fetch(`http://localhost:5050/posts/${postId}`).then((response) =>
+          response.json()
+        ),
+      ]);
+      //   const jsonData = await response.json();
+      setComments(comRes);
+      //   setComments(postRes);
     } catch (error) {
       console.log(error.message);
     }
@@ -28,8 +35,8 @@ const ListComments = ({ submmitted }) => {
   };
 
   useEffect(() => {
-    getComments();
-  }, [submmitted, postId]);
+    getPosts(postId);
+  }, [submitted]);
   const orderedPosts = comments
     .slice()
     .sort((a, b) => b.created.localeCompare(a.created));
@@ -54,4 +61,4 @@ const ListComments = ({ submmitted }) => {
   return <>{renderedPosts}</>;
 };
 
-export default ListComments;
+export default SingleComment;

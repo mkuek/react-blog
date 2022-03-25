@@ -12,6 +12,7 @@ import "./App.css";
 import { ListPosts } from "./components/ListPosts";
 import { Navbar } from "./components/NavBar";
 import { SinglePost } from "./components/SinglePost";
+import SingleComment from "./components/SingleComment";
 function App() {
   return (
     <Router>
@@ -28,6 +29,11 @@ function App() {
             }
           />
           <Route exact path="/posts/:postId" element={<SinglePost />} />
+          <Route
+            exact
+            path="/posts/:postId/comments"
+            element={<SingleComment />}
+          />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </div>

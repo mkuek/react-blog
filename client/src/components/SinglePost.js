@@ -3,12 +3,15 @@ import { useParams, useNavigate } from "react-router-dom";
 import { EditPost } from "./EditPost";
 import axios from "axios";
 import ListComments from "./ListComments";
+import { SubmitComment } from "./SubmitComment";
 
 export const SinglePost = () => {
-  const [comments, setComments] = useState();
-  const [post, setPost] = useState({});
+  const [comments, setComments] = useState({});
+  const [post, setPost] = useState([]);
   const [edit, setEdit] = useState(false);
+  const [addComment, setAddComment] = useState(false);
   const [deleted, setDeleted] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
   const { postId } = useParams();
   const navigate = useNavigate();
 
@@ -16,18 +19,7 @@ export const SinglePost = () => {
     try {
       const response = await fetch(`http://localhost:5050/posts/${postId}`);
       const jsonData = await response.json();
-      setPost(jsonData);
-    } catch (error) {
-      console.log(error.message);
-    }
-  };
-
-  const getComments = async (postId) => {
-    try {
-      const response = await axios.get(
-        `http://localhost:5050/posts/${postId}/comments`
-      );
-      setComments((state) => response.data);
+      setPost((state) => jsonData);
     } catch (error) {
       console.log(error.message);
     }
@@ -58,10 +50,6 @@ export const SinglePost = () => {
       }, 2000);
     }
   }, [deleted]);
-  useEffect(() => {
-    getComments(postId);
-    console.log("component rendered", comments);
-  }, []);
   return (
     <Fragment>
       <div className="card">
@@ -69,7 +57,7 @@ export const SinglePost = () => {
           <h1>Post was deleted</h1>
         ) : (
           <>
-            <h1> {post.title}</h1>
+            <h1> {post.author}</h1>
             <h3>{post.content}</h3>
             <h3>Posted by: {post.author}</h3>
             <p>Posted: {timeConvert(post.created)}</p>
@@ -101,9 +89,31 @@ export const SinglePost = () => {
           </>
         )}
       </div>
+      <div className="comment-form">
+        {addComment === false && (
+          <button onClick={() => setAddComment(true)}>Add a Comment</button>
+        )}
+        {addComment && (
+          <>
+            <div>
+              <SubmitComment
+                submitted={submitted}
+                setSubmitted={setSubmitted}
+              />
+              {submitted && <h3>Comment Success!</h3>}
+            </div>
+            <button onClick={() => setAddComment(false)}>Cancel</button>
+          </>
+        )}
+      </div>
       <div className="comments">
         {/* {comments ? comments[0].author : ""} */}
-        <ListComments comments={comments} post={post} />
+        <ListComments
+          submitted={submitted}
+          setSubmitted={setSubmitted}
+          comments={comments}
+          post={post}
+        />
       </div>
     </Fragment>
   );

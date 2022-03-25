@@ -1,12 +1,15 @@
 import React, { useState } from "react";
+import { useParams } from "react-router-dom";
+
 import axios from "axios";
 
-export const SubmitForm = ({ posts, setPosts, submitted, setSubmitted }) => {
+export const SubmitComment = ({ posts, setPosts, submitted, setSubmitted }) => {
   const [formContents, setFormContents] = useState({
-    title: "",
-    content: "",
+    comment_text: "",
     author: "",
   });
+
+  const { postId } = useParams();
 
   const handleChange = (event) => {
     const name = event.target.name;
@@ -16,32 +19,21 @@ export const SubmitForm = ({ posts, setPosts, submitted, setSubmitted }) => {
       [name]: value,
       created: new Date().toISOString(),
       updated: new Date().toISOString(),
+      post_id: postId,
     });
   };
-
   const handleSubmit = (event) => {
     event.preventDefault();
-    axios.post("http://localhost:5050/posts", formContents);
+    // console.log(formContents);
+    axios.post(`http://localhost:5050/posts/${postId}/comments`, formContents);
     setSubmitted((submitted) => !submitted);
-    setFormContents({ title: "", content: "", author: "" });
+    setFormContents({ comment_text: "", author: "" });
     setTimeout(() => {
       setSubmitted((submitted) => !submitted);
     }, 2000);
   };
   return (
     <form>
-      <div>
-        <label>
-          Title:
-          <input
-            type="text"
-            name="title"
-            id="title"
-            onChange={handleChange}
-            value={formContents.title}
-          />
-        </label>
-      </div>
       <div>
         <label>
           Author:
@@ -56,13 +48,13 @@ export const SubmitForm = ({ posts, setPosts, submitted, setSubmitted }) => {
       </div>
       <div>
         <label>
-          Blog Content:
+          Comment Text:
           <textarea
             type="textarea"
-            name="content"
-            id="content"
+            name="comment_text"
+            id="comment_text"
             onChange={handleChange}
-            value={formContents.content}
+            value={formContents.comment_text}
           />
         </label>
       </div>
