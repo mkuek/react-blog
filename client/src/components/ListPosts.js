@@ -2,10 +2,13 @@ import React, { Fragment, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { parseISO, formatDistanceToNow } from "date-fns";
 import { SubmitForm } from "./SubmitForm";
-import ListComments from "./ListComments";
+import "./css/ListPost.css";
 export const ListPosts = () => {
   const [posts, setPosts] = useState([]);
   const [submitted, setSubmitted] = useState(false);
+  const [addPost, setAddPost] = useState(false);
+  const [numPosts, setNumPosts] = useState(0);
+  const [numComments, setNumComments] = useState(0);
 
   const getPosts = async () => {
     try {
@@ -26,6 +29,7 @@ export const ListPosts = () => {
 
   useEffect(() => {
     getPosts();
+    setNumPosts(posts.length);
   }, [submitted]);
   const orderedPosts = posts
     .slice()
@@ -34,32 +38,43 @@ export const ListPosts = () => {
     return (
       <div key={index} className="card">
         <div className="card-content">
-          <h3>
-            <Link to={`/posts/${post.post_id}`}>{post.title}</Link>
-          </h3>
+          <button>
+            <Link to={`/posts/${post.post_id}`} state={{ numComments }}>
+              {post.title}
+            </Link>
+          </button>
           <h5>{post.content}</h5>
-          <div>
-            <p></p>
-            <i>{`Submitted ${timeConvert(post.created)} ago by 
-            ${post.author}`}</i>
-          </div>
+          <p>
+            {`Submitted ${timeConvert(post.created)} ago by 
+            ${post.author}`}
+          </p>
         </div>
       </div>
     );
   });
 
   return (
-    <>
-      <div className="submit-form">
-        <SubmitForm
-          posts={posts}
-          setPosts={setPosts}
-          sumitted={submitted}
-          setSubmitted={setSubmitted}
-        />
-        <div>{submitted && "Post Successfull!"}</div>
-      </div>
+    <div className="post-list">
+      {addPost === false && (
+        <>
+          <div className="submit-form-add">
+            <button onClick={() => setAddPost(true)}>New Post</button>
+          </div>
+        </>
+      )}
+      {addPost && (
+        <div className="submit-form">
+          <SubmitForm
+            posts={posts}
+            setPosts={setPosts}
+            sumitted={submitted}
+            setSubmitted={setSubmitted}
+          />
+          <button onClick={() => setAddPost(false)}>Cancel</button>
+          <div>{submitted && "Post Successfull!"}</div>
+        </div>
+      )}
       {renderedPosts}
-    </>
+    </div>
   );
 };

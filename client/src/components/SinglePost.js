@@ -1,17 +1,20 @@
 import React, { Fragment, useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { EditPost } from "./EditPost";
 import axios from "axios";
 import ListComments from "./ListComments";
 import { SubmitComment } from "./SubmitComment";
+import "./css/SinglePost.css";
 
 export const SinglePost = () => {
-  const [comments, setComments] = useState({});
   const [post, setPost] = useState([]);
   const [edit, setEdit] = useState(false);
   const [addComment, setAddComment] = useState(false);
   const [deleted, setDeleted] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const location = useLocation();
+  const [numComments, setNumComments] = useState(0);
+  console.log(numComments);
   const { postId } = useParams();
   const navigate = useNavigate();
 
@@ -42,7 +45,7 @@ export const SinglePost = () => {
   };
   useEffect(() => {
     getSinglePost(postId);
-  }, []);
+  }, [numComments]);
   useEffect(() => {
     if (deleted) {
       setTimeout(() => {
@@ -108,11 +111,11 @@ export const SinglePost = () => {
       </div>
       <div className="comments">
         {/* {comments ? comments[0].author : ""} */}
+        <h1>Total comments:{numComments === 0 ? 0 : numComments}</h1>
         <ListComments
           submitted={submitted}
-          setSubmitted={setSubmitted}
-          comments={comments}
-          post={post}
+          numComments={numComments}
+          setNumComments={setNumComments}
         />
       </div>
     </Fragment>

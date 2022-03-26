@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { parseISO, formatDistanceToNow, set } from "date-fns";
 import { useParams, useNavigate } from "react-router-dom";
 
-const ListComments = ({ submmitted }) => {
+const ListComments = ({ submmitted, numComments, setNumComments }) => {
   const [posts, setPosts] = useState([]);
   const [comments, setComments] = useState([]);
 
@@ -15,6 +15,7 @@ const ListComments = ({ submmitted }) => {
       );
       const jsonData = await response.json();
       setComments(jsonData);
+      setNumComments(jsonData.length);
     } catch (error) {
       console.log(error.message);
     }
@@ -29,7 +30,7 @@ const ListComments = ({ submmitted }) => {
 
   useEffect(() => {
     getComments();
-  }, [submmitted, postId]);
+  }, [submmitted]);
   const orderedPosts = comments
     .slice()
     .sort((a, b) => b.created.localeCompare(a.created));
@@ -37,15 +38,12 @@ const ListComments = ({ submmitted }) => {
     return (
       <div key={index} className="comment-card">
         <div className="card-content">
-          <h3>
+          <p>
             <Link to={`/posts/${post.post_id}`}>{post.author}</Link>
-          </h3>
-          <h5>{post.comment_text}</h5>
-          <div>
-            <p></p>
-            <i>{`Submitted ${timeConvert(post.created)} ago by 
-            ${post.author}`}</i>
-          </div>
+          </p>
+          <p>{post.comment_text}</p>
+          <p>{`Submitted ${timeConvert(post.created)} ago by 
+            ${post.author}`}</p>
         </div>
       </div>
     );
