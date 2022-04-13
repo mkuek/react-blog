@@ -19,15 +19,7 @@ function App() {
       <div className="App">
         <Navbar />
         <Routes>
-          <Route
-            exact
-            path="/"
-            element={
-              <>
-                <ListPosts />
-              </>
-            }
-          />
+          <Route exact path="/" element={<ListPosts />} />
           <Route exact path="/posts/:postId" element={<SinglePost />} />
           <Route
             exact
